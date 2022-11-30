@@ -1,0 +1,12 @@
+{
+	"name": "me.laurens.glue",
+	"displayName": "Glue",
+	"version": "0.1.0",
+	"description": "Base system for consent based interaction.",
+	"author": {
+	  "name": "Laurens Kruis",
+	  "email": "laurens@kruis.com",
+	  "url": "http://www.laurens.me"
+	},
+	"type": "library"
+  }
