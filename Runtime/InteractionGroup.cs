@@ -28,6 +28,7 @@ namespace LaurensKruis.Glue
         public IReadOnlyCollection<IInteractable> Interactables => interactables.ToList().AsReadOnly();
         public IReadOnlyCollection<IInteractor> Interactors => interactors.ToList().AsReadOnly();
 
+        public bool HasMembers => interactables.Count > 0 || interactors.Count > 0;
 
         private void OnEnable()
         {
