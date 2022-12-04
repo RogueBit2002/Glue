@@ -48,25 +48,41 @@ namespace LaurensKruis.Glue
                 interactable.ProcessInteractable_Internal();
         }
 
-        public void RegisterInteractable(IInteractable interactable)
+        #region Register/Unregister
+
+        #region Interactable
+        public void RegisterInteractable(ISelectInteractable interactable) => RegisterInteractable((IInteractable) interactable);
+        public void RegisterInteractable(IHoverInteractable interactable) => RegisterInteractable((IInteractable) interactable);
+        private void RegisterInteractable(IInteractable interactable)
         {
             if (interactables.Contains(interactable))
                 throw new ArgumentException("Interactable is already registered.");
+
+            interactables.Add(interactable);
         }
 
-        public void RegisterInteractor(IInteractor interactor)
+        public bool UnregisterInteractable(IInteractable interactable) => interactables.Remove(interactable);
+        #endregion
+
+        #region Interactor
+        public void RegisterInteractor(ISelectInteractor interactor) => RegisterInteractor((IInteractor) interactor);
+        public void RegisterInteractor(IHoverInteractor interactor) => RegisterInteractor((IInteractor)interactor);
+        private void RegisterInteractor(IInteractor interactor)
         {
             if (interactors.Contains(interactor))
                 throw new ArgumentException("Interactor is already registered.");
+
+            interactors.Add(interactor);
         }
 
-
-        public bool UnregisterInteractable(IInteractable interactable) => interactables.Remove(interactable);
-
         public bool UnregisterInteractor(IInteractor interactor) => interactors.Remove(interactor);
+        #endregion
 
+        #endregion
 
+        #region Requests
 
+        #region Select
         public bool RequestSelection(ISelectInteractor interactor, ISelectInteractable interactable)
         {
             if (!interactables.Contains(interactable))
@@ -100,5 +116,46 @@ namespace LaurensKruis.Glue
             interactor.OnSelectEnd_Internal(interactable);
             interactable.OnSelectEnd_Internal(interactor);
         }
+
+        #endregion
+
+        #region Hover
+
+        public bool RequestHover(IHoverInteractor interactor, IHoverInteractable interactable)
+        {
+            if (!interactables.Contains(interactable))
+                throw new ArgumentException("Interactable isn't registered.");
+
+            if (!interactors.Contains(interactor))
+                throw new ArgumentException("Interactor isn't registered.");
+
+            if (interactor.HoverTarget == interactable)
+                return false;
+
+            if (!interactor.CanHover(interactable) || !interactable.CanHover(interactor))
+                return false;
+
+            interactor.OnHoverStart_Internal(interactable);
+            interactable.OnHoverStart_Internal(interactor);
+
+            return true;
+        }
+
+        public void RequestHoverEnd(IHoverInteractor interactor)
+        {
+            if (!interactors.Contains(interactor))
+                throw new ArgumentException("Interactor isn't registered.");
+
+            if (interactor.HoverTarget == null)
+                return;
+
+            IHoverInteractable interactable = interactor.HoverTarget;
+
+            interactor.OnHoverEnd_Internal(interactable);
+            interactable.OnHoverEnd_Internal(interactor);
+        }
+
+        #endregion
+        #endregion
     }
 }
