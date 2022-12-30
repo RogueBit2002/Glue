@@ -10,6 +10,8 @@ namespace LaurensKruis.Glue
 
         public const string PackageName = "me.laurens.glue";
 
-        public const string AssetMenuPrefix = "Scriptable Object/Laurens Kruis/" + Name + "/";
+        public const string MenuPrefix = "Laurens Kruis/" + Name + "/";
+
+        public const string AssetMenuPrefix = "Scriptable Object/" + MenuPrefix;
     }
 }

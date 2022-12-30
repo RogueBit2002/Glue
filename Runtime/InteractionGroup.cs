@@ -20,6 +20,7 @@ namespace LaurensKruis.Glue
             }
         }
 
+        //Need this because OnDisable doensn't get called when deleting a ScriptableObject :(
         internal static void FilterNulls() => groups.Where(g => g == null).ToList().ForEach(g => groups.Remove(g));
 
         private HashSet<IInteractable> interactables = new HashSet<IInteractable>();
